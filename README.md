@@ -2,6 +2,7 @@
 
 Install npm
 Install bower
+Install gulp
 
 Windows:
  * Run the "_install-dependencies.bat" file in the _build folder
@@ -9,3 +10,6 @@ Windows:
 Else run: 
  * bower install
  * npm install -d
+
+Finally:
+* gulp build
