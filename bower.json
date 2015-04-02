@@ -1,0 +1,15 @@
+{
+  "name": "Reference Web App",
+  "version": "0.1.0",
+  "authors": [
+    "Tim Goyer <tim.goyer@gmail.com>"
+  ],
+  "ignore": [
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "fontawesome": "~4.3.0",
+    "foundation": "~5.4.7"
+  }
+}
