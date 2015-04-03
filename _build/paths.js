@@ -17,6 +17,7 @@ module.exports = {
       'bower_components/foundation/scss/**/*.scss'
   ],
   output: 'dist/',
+  local: 'local/',
   doc:'doc/',
   e2eSrc: 'test/e2e/src/*.js',
   e2eDist: 'test/e2e/dist/'
