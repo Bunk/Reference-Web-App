@@ -1,8 +1,10 @@
 # Reference-Web-App
 
-Install npm
-Install bower
-Install gulp
+Install:
+* npm
+* git
+* bower
+* gulp
 
 Windows:
  * Run the "_install-dependencies.bat" file in the _build folder
