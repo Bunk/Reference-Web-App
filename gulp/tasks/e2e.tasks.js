@@ -1,5 +1,5 @@
 var gulp = require('gulp'),
-    paths = require('../paths'),
+    paths = require('../util/paths'),
     plugins = require('gulp-load-plugins')({lazy: true});
 
 // for full documentation of gulp-protractor,

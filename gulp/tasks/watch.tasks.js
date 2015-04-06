@@ -1,6 +1,6 @@
-var gulp = require('gulp');
-var paths = require('../paths');
-var browserSync = require('browser-sync');
+var gulp = require('gulp'),
+    paths = require('../util/paths'),
+    browserSync = require('browser-sync');
 
 // outputs changes to files to the console
 function reportChange(event) {
@@ -22,5 +22,5 @@ gulp.task('watch:dist', ['serve:dist'], function() {
     gulp.watch(paths.js.app, ['build:dist', browserSync.reload]).on('change', reportChange);
     gulp.watch(paths.js.vendor, ['build:dist', browserSync.reload]).on('change', reportChange);
     gulp.watch(paths.html, ['build:dist', browserSync.reload]).on('change', reportChange);
-    gulp.watch(paths.style, ['build:dist', browserSync.reload]).on('change', reportChange);
+    gulp.watch(paths.style, ['sass:dist', browserSync.reload]).on('change', reportChange);
 });
