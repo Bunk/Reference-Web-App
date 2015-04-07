@@ -6,16 +6,20 @@ module.exports = {
     root: appRoot,
     js: {
         vendor: [
-            'bower_components/foundation/js/foundation/foundation.js',
-            'bower_components/foundation/js/foundation/foundation.*.js'
+            appRoot + 'vendor/**/*.js',
+            'bower_components/**/*.js'
         ],
-        app: appRoot + '**/*.js'
+        app: appRoot + 'app/**/*.js'
     },
     maps: 'sourcemaps/',
     html: [ appRoot + '**/*.html' ],
     style: [
-        appRoot + 'styles/**/*.scss',
-        'bower_components/foundation/scss/**/*.scss'
+        appRoot + 'content/**/*.scss',
+        appRoot + 'content/**/*.css',
+        appRoot + 'app/**/*.scss',
+        appRoot + 'app/**/*.css',
+        'bower_components/**/*.scss',
+        'bower_components/**/*.css'
     ],
     dist: 'dist/',
     local: 'local/',

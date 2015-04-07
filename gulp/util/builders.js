@@ -1,7 +1,7 @@
 var gulp = require('gulp'),
     paths = require('./paths'),
     series = require('stream-series'),
-    plugins = require('gulp-load-plugins')({lazy: true});
+    plugins = require('gulp-load-plugins')({lazy: false});
 
 function rootPath(isDist) {
     return (isDist) ? paths.dist : paths.local;
@@ -79,21 +79,22 @@ module.exports = {
             dest = rootPath(isDist),
             injection;
         if (isDist) {
-            injection = plugins.inject(series(
-                gulp.src([
-                    paths.dist + '/css/normalize-*.css',
-                    paths.dist + '/css/foundation-*.css'
-                ], srcOps),
-                gulp.src([ paths.dist + '/css/main-*.css' ], srcOps),
-                gulp.src([ paths.dist + '/scripts/vendor-*.js' ], srcOps),
-                gulp.src([ paths.dist + '/scripts/app-*.js' ], srcOps)
-            ), { ignorePath: dest })
+            injection = plugins.inject(
+                series(
+                    gulp.src([ paths.dist + '/css/*-*.css' ], srcOps),
+                    gulp.src([ paths.dist + '/scripts/vendor-*.js' ]), srcOps),
+                    gulp.src([ paths.dist + '/scripts/app-*.js' ]), srcOps)
+                ), { ignorePath: dest }
+            )
         } else {
-            injection = plugins.inject(series(
-                gulp.src([ paths.local + '/css/**/*.css' ], srcOps),
-                gulp.src([ paths.local + '/scripts/**/*.js' ], srcOps),
-                gulp.src([ paths.local + '/scripts/app/**/*.js' ], srcOps)
-            ), {ignorePath: dest})
+            injection = plugins.inject(
+                series(
+                    gulp.src([ paths.local + '/css/*.css' ], srcOps),
+                    gulp.src([ paths.local + '/css/**/*.css' ], srcOps),
+                    gulp.src([ paths.local + '/scripts/*.js' ], srcOps),
+                    gulp.src([ paths.local + '/scripts/**/*.js' ]), srcOps)
+                ), {ignorePath: dest}
+            )
         }
         var pipeline = gulp.src(paths.html)
             .pipe(plugins.plumber(onError))
