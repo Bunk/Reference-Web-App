@@ -7,17 +7,16 @@ var gulp = require('gulp'),
         lazy: false,
         pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
     }),
-    fontFilter = plugins.filter('**/*.{eot,svg,ttf,woff,woff2}'),
+    opts = {
+        html: { empty: true, spare: true, quotes: true },
+        uglify: { preserveComments: plugins.uglifySaveLicense },
+        templateCache: { module: options.module, root: 'tmpl-' }
+    };
+
+var fontFilter = plugins.filter('**/*.{eot,svg,ttf,woff,woff2}'),
     htmlFilter = plugins.filter('*.html'),
     jsFilter = plugins.filter('**/*.js'),
-    cssFilter = plugins.filter('**/*.css'),
-    opts = {
-        html: { empty: true, spare: true, quotes: true, conditionals: true },
-        size: { title: options.paths.dist + '/', showFiles: true },
-        uglify: { preserveComments: plugins.uglifySaveLicense },
-        partials: { starttag: '<!-- inject:partials -->', ignorePath: options.paths.local + '/partials', addRootSlash: false },
-        templateCache: { module: options.module, root: 'tmpl-' }
-    }
+    cssFilter = plugins.filter('**/*.css');
 
 function rootPath(isDist) {
     return (isDist) ? options.paths.dist : options.paths.local;
@@ -29,47 +28,49 @@ function onError(err) {
 }
 
 module.exports = {
-    html: function() {
-        var partialsInjectFile = gulp.src(options.paths.local + '/partials/templateCacheHtml.js', { read: false });
-        var assets;
+    html: function(isDist) {
+        var assets = plugins.useref.assets(),
+        dest = rootPath(isDist),
+        index = options.paths.app + '*.html';
 
-        return gulp.src(options.paths.local + '/*.html')
-            .pipe(plugins.inject(partialsInjectFile, opts.partials))
-            .pipe(assets = plugins.useref.assets())
-            .pipe(plugins.rev())
-            .pipe(jsFilter)
-            .pipe(plugins.ngAnnotate())
-            .pipe(plugins.uglify(opts.uglify)).on('error', options.onerror('Uglify'))
-            .pipe(jsFilter.restore())
-            .pipe(cssFilter)
-            .pipe(plugins.csso())
-            .pipe(cssFilter.restore())
-            .pipe(assets.restore())
+        var partialsInjectFile = gulp.src(dest + '/partials/templateCacheHtml.js', { read: false });
+        var pipeline = gulp.src(index)
+            .pipe(plugins.inject(
+                partialsInjectFile, {
+                    starttag: '<!-- inject:partials -->',
+                    ignorePath: dest + '/partials',
+                    addRootSlash: false
+                }
+            ))
             .pipe(plugins.useref())
-            .pipe(plugins.revReplace())
-            .pipe(htmlFilter)
-            .pipe(plugins.minifyHtml(opts.html))
-            .pipe(htmlFilter.restore())
-            .pipe(gulp.dest(options.paths.dist + '/'))
-            .pipe(plugins.size(opts.size));
+            .pipe(plugins.revReplace());
+        if(isDist) {
+            pipeline = pipeline.pipe(plugins.minifyHtml(opts.html));
+        }
+        pipeline = pipeline.pipe(gulp.dest(dest))
+            .pipe(plugins.size({ title: dest, showFiles: true }));
+        return pipeline;
     },
-    fonts: function() {
+    fonts: function(isDist) {
+        var dest = rootPath(isDist);
         return gulp.src(plugins.mainBowerFiles())
             .pipe(fontFilter)
             .pipe(plugins.flatten())
-            .pipe(gulp.dest(options.paths.dist + '/fonts/'));
+            .pipe(gulp.dest(dest + 'fonts/'));
     },
-    other: function () {
+    other: function (isDist) {
+        var dest = rootPath(isDist);
         return gulp.src([
-            options.root + '/**/*',
-            '!' + options.root + '/**/*.{html,css,js,scss}'
+            options.root + '**/*',
+            '!' + options.root + '**/*.{html,css,js,scss}'
         ])
-        .pipe(gulp.dest(options.dist + '/'));
+        .pipe(gulp.dest(dest + '/'));
     },
-    templates: function() {
-        return gulp.src(options.paths.app + '/**/*.html')
+    templates: function(isDist) {
+        var dest = rootPath(isDist);
+        return gulp.src(options.paths.app + '**/!(index)*.html')
             .pipe(plugins.minifyHtml(opts.html))
             .pipe(plugins.angularTemplatecache('templateCacheHtml.js', opts.templateCache))
-            .pipe(gulp.dest(options.paths.local + '/partials/'));
+            .pipe(gulp.dest(dest + 'partials/'));
     }
 }

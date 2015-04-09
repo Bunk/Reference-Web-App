@@ -26,22 +26,28 @@ module.exports = {
             pipeline = pipeline
                 .pipe(plugins.sourcemaps.init())
                 .pipe(plugins.uglify())
+                .pipe(plugins.concat('vendor.js'))
                 .pipe(plugins.rev())
                 .pipe(plugins.sourcemaps.write(options.paths.maps));
         }
         return pipeline.pipe(gulp.dest(dest + '/scripts'));
     },
     app: function (isDist) {
-        var dest = rootPath(isDist);
-        var pipeline = gulp.src(options.paths.app)
+        var dest = rootPath(isDist),
+            scripts = options.paths.app + "**/*.js";
+        var pipeline = gulp.src(scripts)
             .pipe(plugins.plumber(onError))
             .pipe(plugins.changed(dest))
-            .pipe(jsFilter);
+            .pipe(jsFilter)
+            .pipe(plugins.notify('Linting: <%= file.relative %>...'))
+            .pipe(plugins.jshint('.jshintrc'))
+            .pipe(plugins.jshint.reporter('jshint-stylish'));
         if (isDist) {
             pipeline = pipeline
                 .pipe(plugins.sourcemaps.init())
                 .pipe(plugins.ngAnnotate())
                 .pipe(plugins.uglify())
+                .pipe(plugins.concat('app.js'))
                 .pipe(plugins.rev())
                 .pipe(plugins.sourcemaps.write(options.paths.maps));
         }

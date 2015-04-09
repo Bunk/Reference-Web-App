@@ -29,7 +29,7 @@ module.exports = {
         if (isDist) {
             pipeline = pipeline
                 .pipe(plugins.sourcemaps.init())
-                .pipe(plugins.minifyCss())
+                .pipe(plugins.csso())
                 .pipe(plugins.rev())
                 .pipe(plugins.sourcemaps.write(options.paths.maps));
         }

@@ -29,12 +29,12 @@ module.exports = {
             srcRoot + 'content/**/*.scss',
             appRoot + '**/*.scss'
         ],
-        dist: 'dist',
-        local: 'local',
-        doc: 'doc',
-        e2e: 'e2e',
+        dist: '_dist/',
+        local: '_local/',
+        doc: 'doc/',
+        e2e: 'e2e/',
         e2eSrc: 'test/e2e/src/*.js',
-        e2eDist: 'test/e2e/dist'
+        e2eDist: 'test/e2e/dist/'
     },
     onerror: function(title) {
         return function(err) {

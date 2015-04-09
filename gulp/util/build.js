@@ -9,8 +9,13 @@ module.exports = {
         var mode = (isDist) ? ':dist' : '';
         return runSequence(
             'clean',
-            'lint',
-            ['app.js' + mode, 'vendor.js' + mode, 'sass' + mode],
+            [
+                'app.js' + mode,
+                //'vendor.js' + mode,
+                'sass' + mode,
+                'fonts' + mode,
+                'templates' + mode
+            ],
             'html' + mode,
             callback
         );
