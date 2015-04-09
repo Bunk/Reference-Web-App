@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
     runSequence = require('run-sequence'),
-    paths = require('../util/paths'),
+    options = require('../util/options'),
     changelog = require('conventional-changelog'),
     fs = require('fs'),
     bump = require('gulp-bump'),
