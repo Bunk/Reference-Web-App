@@ -7,6 +7,12 @@
     "type": "git",
     "url": "https://github.com/Spiffdog-Design/Reference-Web-App"
   },
+  "scripts": {
+    "init": "npm install",
+    "install": "bower install",
+    "start": "gulp serve",
+    "test": "gulp test"
+  },
   "engines": {
     "node": ">=0.10.0"
   },
