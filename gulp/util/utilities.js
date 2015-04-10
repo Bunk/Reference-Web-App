@@ -21,11 +21,11 @@
         },
         watch: function (mode) {
             var app = options.paths.app,
-                content = options.paths.root + 'content/';
+                assets = options.paths.assets;
 
             gulp.watch(app + '**/*.html',       ['build' + mode]).on('change', reportChange);
             gulp.watch(app + '**/*.js',         ['build' + mode]).on('change', reportChange);
-            gulp.watch(content + '**/*.scss',   ['build' + mode]).on('change', reportChange);
+            gulp.watch(assets + '**/*.scss',   ['build' + mode]).on('change', reportChange);
             // gulp.watch(options.paths.js.app,    [buildTask, plugins.browserSync.reload]).on('change', reportChange);
             // gulp.watch(options.paths.js.vendor, [buildTask, plugins.browserSync.reload]).on('change', reportChange);
             // gulp.watch(options.paths.html,      [buildTask, plugins.browserSync.reload]).on('change', reportChange);

@@ -4,6 +4,7 @@
     var gutil = require('gulp-util'),
         srcRoot = 'src/',
         appRoot = srcRoot + 'app/',
+        assetRoot = srcRoot + 'assets/',
         bowerRoot = 'bower_components/',
         bowerJson = './bower.json',
         mapsRoot = 'sourcemaps/';
@@ -17,19 +18,20 @@
         paths: {
             root: srcRoot,
             app: appRoot,
+            assets: assetRoot,
             bower: bowerRoot,
             bowerJson: bowerJson,
             maps: mapsRoot,
             index: srcRoot + 'index.html',
             images: [
-                srcRoot + 'content/**/*.{gif,jgp,png}'
+                assetRoot + '**/*.{gif,jgp,png}'
             ],
             fonts: [
                 bowerRoot + 'fontawesome/fonts/*.*'
             ],
             style: [
                 bowerRoot + 'angular/**/*.css',
-                srcRoot + 'content/**/*.scss',
+                assetRoot + '**/*.scss',
                 appRoot + '**/*.scss'
             ],
             dist: '_dist/',
