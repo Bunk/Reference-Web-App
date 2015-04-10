@@ -14,7 +14,3 @@ indent_size = 4
 
 [{*.tt,*.cs}]
 end_of_line = crlf
-
-# Matches the exact files either package.json or .travis.yml
-[{package.json,.travis.yml}]
-indent_size = 2

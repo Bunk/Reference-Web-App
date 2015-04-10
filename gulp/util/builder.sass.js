@@ -1,38 +1,40 @@
-'use strict';
+(function() {
+    'use strict';
 
-var gulp = require('gulp'),
-    runSequence = require('run-sequence'),
-    plugins = require('gulp-load-plugins')({ lazy: false }),
-    options = require('./options'),
-    wiredep = require('wiredep').stream,
-    mainBowerFiles = require('main-bower-files');
+    var gulp = require('gulp'),
+        plugins = require('gulp-load-plugins')({
+            lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
+        }),
+        options = require('./options'),
+        mainBowerFiles = require('main-bower-files');
 
-var scssFilter = plugins.filter('**/.{scss,css}');
+    var scssFilter = plugins.filter('**/.{scss,css}');
 
-function rootPath(isDist) {
-    return (isDist) ? options.paths.dist : options.paths.local;
-}
-
-function onError(err) {
-    console.log(err);
-    this.emit('end');
-}
-
-module.exports = {
-    sass: function (isDist) {
-        var dest = rootPath(isDist);
-        var pipeline = gulp.src(mainBowerFiles().concat(options.paths.style))
-            .pipe(plugins.plumber(onError))
-            .pipe(plugins.changed(dest, {extension: '.css'}))
-            .pipe(scssFilter)
-            .pipe(plugins.sass());
-        if (isDist) {
-            pipeline = pipeline
-                .pipe(plugins.sourcemaps.init())
-                .pipe(plugins.csso())
-                .pipe(plugins.rev())
-                .pipe(plugins.sourcemaps.write(options.paths.maps));
-        }
-        return pipeline.pipe(gulp.dest(dest + '/css'));
+    function rootPath(isDist) {
+        return (isDist) ? options.paths.dist : options.paths.local;
     }
-}
+
+    function onError(err) {
+        console.log(err);
+        this.emit('end');
+    }
+
+    module.exports = {
+        sass: function (isDist) {
+            var dest = rootPath(isDist);
+            var pipeline = gulp.src(mainBowerFiles().concat(options.paths.style))
+                .pipe(plugins.plumber(onError))
+                .pipe(plugins.changed(dest, {extension: '.css'}))
+                .pipe(scssFilter)
+                .pipe(plugins.sass());
+            if (isDist) {
+                pipeline = pipeline
+                    .pipe(plugins.sourcemaps.init())
+                    .pipe(plugins.csso())
+                    .pipe(plugins.rev())
+                    .pipe(plugins.sourcemaps.write(options.paths.maps));
+            }
+            return pipeline.pipe(gulp.dest(dest + '/css'));
+        }
+    };
+})();
