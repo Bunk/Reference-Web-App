@@ -9,8 +9,7 @@
             return runSequence(
                 'clean',
                 [
-                    'app.js' + mode,
-                    'vendor.js' + mode,
+                    'js' + mode,
                     'sass' + mode,
                     'fonts' + mode,
                     'templates' + mode

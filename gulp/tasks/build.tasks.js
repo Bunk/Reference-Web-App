@@ -5,7 +5,8 @@
         build = require('../util/build'),
         utilities = require('../util/utilities'),
         htmlBuilder = require('../util/builder.html'),
-        scriptBuilder = require('../util/builder.script'),
+        appScriptBuilder = require('../util/builder.script.app'),
+        vendorScriptBuilder = require('../util/builder.script.vendor'),
         sassBuilder = require('../util/builder.sass');
 
     // TASK RUNNERS
@@ -17,18 +18,18 @@
     gulp.task('js', ['app.js','vendor.js']);
     gulp.task('js:dist', ['app.js:dist','vendor.js:dist']);
 
-    gulp.task('watch', ['serve'],           function() { return utilities.watch('build'); });
-    gulp.task('watch:dist', ['serve:dist'], function() { return utilities.watch('build:dist'); });
+    gulp.task('watch', ['serve'],           function() { return utilities.watch(''); });
+    gulp.task('watch:dist', ['serve:dist'], function() { return utilities.watch(':dist'); });
 
     // PROJECT BUILDERS
     gulp.task('build',          function(cb) { return build.build(false, cb); });
     gulp.task('build:dist',     function(cb) { return build.build(true, cb); });
 
     // SCRIPT BUILDERS
-    gulp.task('app.js',         function() { return scriptBuilder.app(false); });
-    gulp.task('app.js:dist',    function() { return scriptBuilder.app(true); });
-    gulp.task('vendor.js',      function() { return scriptBuilder.vendor(false); });
-    gulp.task('vendor.js:dist', function() { return scriptBuilder.vendor(true); });
+    gulp.task('app.js',         function() { return appScriptBuilder.app(false); });
+    gulp.task('app.js:dist',    function() { return appScriptBuilder.app(true); });
+    gulp.task('vendor.js',      function() { return vendorScriptBuilder.vendor(false); });
+    gulp.task('vendor.js:dist', function() { return vendorScriptBuilder.vendor(true); });
 
     // STYLES BUILDERS
     gulp.task('sass',           function() { return sassBuilder.sass(false); });

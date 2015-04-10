@@ -2,14 +2,15 @@
     'use strict';
 
     var gulp = require('gulp'),
+        options = require('../util/options'),
         browserSync = require('browser-sync');
 
     gulp.task('serve', ['build'], function(done) {
         browserSync({
             open: true,
-            port: 8080,
+            port: options.browserPorts.local,
             server: {
-                baseDir: './local',
+                baseDir: options.paths.local,
                 index: 'index.html',
                 middleware: [
                     function (req, res, next) {
@@ -24,9 +25,9 @@
     gulp.task('serve:dist', ['build:dist'], function(done) {
         browserSync({
             open: true,
-            port: 8081,
+            port: options.browserPorts.dist,
             server: {
-                baseDir: './dist',
+                baseDir: options.paths.dist,
                 index: 'index.html',
                 middleware: [
                     function (req, res, next) {

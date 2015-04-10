@@ -3,13 +3,17 @@
 
     var gutil = require('gulp-util'),
         srcRoot = 'src/',
+        appRoot = srcRoot + 'app/',
         bowerRoot = 'bower_components/',
         bowerJson = './bower.json',
-        appRoot = srcRoot + 'app/',
         mapsRoot = 'sourcemaps/';
 
     module.exports = {
         module: 'Reference-Web-App',
+        browserPorts: {
+            local: 8080,
+            dist: 8081
+        },
         paths: {
             root: srcRoot,
             app: appRoot,
@@ -24,7 +28,7 @@
                 bowerRoot + 'fontawesome/fonts/*.*'
             ],
             style: [
-                bowerRoot + 'angular/**/angular-csp.css',
+                bowerRoot + 'angular/**/*.css',
                 srcRoot + 'content/**/*.scss',
                 appRoot + '**/*.scss'
             ],

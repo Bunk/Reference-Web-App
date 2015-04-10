@@ -5,10 +5,9 @@
         plugins = require('gulp-load-plugins')({
             lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
         }),
+        mainBowerFiles = require('main-bower-files'),
         options = require('./options'),
-        mainBowerFiles = require('main-bower-files');
-
-    var scssFilter = plugins.filter('**/*.{scss,css}');
+        jsFilter = plugins.filter('**/*.js');
 
     function rootPath(isDist) {
         return (isDist) ? options.paths.dist : options.paths.local;
@@ -20,22 +19,21 @@
     }
 
     module.exports = {
-        sass: function (isDist) {
+        vendor: function (isDist) {
             var dest = rootPath(isDist);
-            var pipeline = gulp.src(mainBowerFiles().concat(options.paths.style))
+            var pipeline = gulp.src(mainBowerFiles())
                 .pipe(plugins.plumber(onError))
-                .pipe(scssFilter)
-                .pipe(plugins.sass());
+                .pipe(plugins.changed(dest))
+                .pipe(jsFilter);
             if (isDist) {
                 pipeline = pipeline
                     .pipe(plugins.sourcemaps.init())
-                    .pipe(plugins.csso())
+                    .pipe(plugins.uglify())
+                    .pipe(plugins.concat('vendor.js'))
                     .pipe(plugins.rev())
                     .pipe(plugins.sourcemaps.write(options.paths.maps));
             }
-            pipeline = pipeline.pipe(gulp.dest(dest + '/css'));
-
-            return pipeline;
+            return pipeline.pipe(gulp.dest(dest + '/scripts'));
         }
     };
 })();

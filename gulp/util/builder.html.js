@@ -9,7 +9,12 @@
         opts = {
             html: { empty: true, spare: true, quotes: true },
             uglify: { preserveComments: plugins.uglifySaveLicense },
-            templateCache: { module: options.module, root: 'tmpl-' }
+            templateCache: {
+                module: options.module,
+                root: 'templates',
+                templateHeader: '(function() {"use strict";angular.module("<%= module %>"<%= standalone %>).run(["$templateCache", function($templateCache) {',
+                templateFooter: '}]);})();'
+            }
         };
 
     var fontFilter = plugins.filter('**/*.{eot,svg,ttf,woff,woff2}');
@@ -21,19 +26,11 @@
     module.exports = {
         html: function(isDist) {
             var dest = rootPath(isDist),
+            injects = gulp.src([dest + '**/*.js', dest + '**/*.css'], {read: false}),
             index = options.paths.app + '*.html';
 
-            var partialsInjectFile = gulp.src(dest + '/partials/templateCacheHtml.js', { read: false });
             var pipeline = gulp.src(index)
-                .pipe(plugins.inject(
-                    partialsInjectFile, {
-                        starttag: '<!-- inject:partials -->',
-                        ignorePath: dest + '/partials',
-                        addRootSlash: false
-                    }
-                ))
-                .pipe(plugins.useref())
-                .pipe(plugins.revReplace());
+                .pipe(plugins.inject(injects, {ignorePath: dest}));
             if(isDist) {
                 pipeline = pipeline.pipe(plugins.minifyHtml(opts.html));
             }
@@ -58,10 +55,14 @@
         },
         templates: function(isDist) {
             var dest = rootPath(isDist);
-            return gulp.src(options.paths.app + '**/!(index)*.html')
-                .pipe(plugins.minifyHtml(opts.html))
+            var pipeline = gulp.src(options.paths.app + '**/!(index)*.html');
+            if(isDist) {
+                pipeline = pipeline.pipe(plugins.minifyHtml(opts.html));
+            }
+            pipeline = pipeline
                 .pipe(plugins.angularTemplatecache('templateCacheHtml.js', opts.templateCache))
-                .pipe(gulp.dest(dest + 'partials/'));
+                .pipe(gulp.dest(dest + 'scripts/templates/'));
+            return pipeline;
         }
     };
 })();
