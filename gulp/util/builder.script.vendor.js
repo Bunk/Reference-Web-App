@@ -6,8 +6,7 @@
             lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
         }),
         mainBowerFiles = require('main-bower-files'),
-        options = require('./options'),
-        jsFilter = plugins.filter('**/*.js');
+        options = require('./options');
 
     function rootPath(isDist) {
         return (isDist) ? options.paths.dist : options.paths.local;
@@ -20,7 +19,8 @@
 
     module.exports = {
         vendor: function (isDist) {
-            var dest = rootPath(isDist);
+            var dest = rootPath(isDist),
+                jsFilter = plugins.filter('**/*.js');
             var pipeline = gulp.src(mainBowerFiles())
                 .pipe(plugins.plumber(onError))
                 .pipe(plugins.changed(dest))

@@ -27,7 +27,8 @@
                 assetRoot + '**/*.{gif,jgp,png}'
             ],
             fonts: [
-                bowerRoot + 'fontawesome/fonts/*.*'
+                bowerRoot + '**/*.{eot,svg,ttf,woff,woff2}',
+                srcRoot + '**/*.{eot,svg,ttf,woff,woff2}'
             ],
             style: [
                 bowerRoot + 'angular/**/*.css',

@@ -17,8 +17,6 @@
             }
         };
 
-    var fontFilter = plugins.filter('**/*.{eot,svg,ttf,woff,woff2}');
-
     function rootPath(isDist) {
         return (isDist) ? options.paths.dist : options.paths.local;
     }
@@ -39,7 +37,8 @@
             return pipeline;
         },
         fonts: function(isDist) {
-            var dest = rootPath(isDist);
+            var fontFilter = plugins.filter('**/*.{eot,svg,ttf,woff,woff2}'),
+                dest = rootPath(isDist);
             return gulp.src(plugins.mainBowerFiles())
                 .pipe(fontFilter)
                 .pipe(plugins.flatten())

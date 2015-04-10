@@ -1,10 +1,12 @@
-'use strict';
+(function() {
+    'use strict';
 
-var Person = {
-    firstName : 'Fred',
-    sayName : function() {
-        console.log('Hello, my name is ' + this.firstName);
-    }
-};
+    var Person = {
+        firstName : 'Fred',
+        sayName : function() {
+            console.log('Hello, my name is ' + this.firstName);
+        }
+    };
 
-Person.sayName();
+    Person.sayName();
+})();

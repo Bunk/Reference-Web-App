@@ -8,8 +8,6 @@
         options = require('./options'),
         mainBowerFiles = require('main-bower-files');
 
-    var scssFilter = plugins.filter('**/*.{scss,css}');
-
     function rootPath(isDist) {
         return (isDist) ? options.paths.dist : options.paths.local;
     }
@@ -21,7 +19,9 @@
 
     module.exports = {
         sass: function (isDist) {
-            var dest = rootPath(isDist);
+            var dest = rootPath(isDist),
+                scssFilter = plugins.filter('**/*.{scss,css}');
+            
             var pipeline = gulp.src(mainBowerFiles().concat(options.paths.style))
                 .pipe(plugins.plumber(onError))
                 .pipe(scssFilter)
