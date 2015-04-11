@@ -60,5 +60,8 @@
     "wiredep": "^2.2.2",
     "yargs": "^3.7.0"
   },
-  "dependencies": { }
+  "dependencies": {
+    "gulp-if": "~1.2.5",
+    "event-stream": "~3.3.0"
+  }
 }

@@ -5,8 +5,7 @@
         plugins = require('gulp-load-plugins')({
             lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
         }),
-        options = require('./options'),
-        jsFilter = plugins.filter('**/*.js');
+        options = require('./options');
 
     function rootPath(isDist) {
         return (isDist) ? options.paths.dist : options.paths.local;
@@ -18,15 +17,17 @@
     }
 
     module.exports = {
+        // Moves app scripts to the dest folder
         app: function (isDist) {
             var dest = rootPath(isDist),
                 scripts = options.paths.app + '**/*.js';
+
             var pipeline = gulp.src(scripts)
                 .pipe(plugins.plumber(onError))
                 .pipe(plugins.changed(dest))
-                .pipe(jsFilter)
                 .pipe(plugins.jshint('.jshintrc'))
                 .pipe(plugins.jshint.reporter('jshint-stylish'));
+
             if (isDist) {
                 pipeline = pipeline
                     .pipe(plugins.sourcemaps.init())
@@ -36,7 +37,8 @@
                     .pipe(plugins.rev())
                     .pipe(plugins.sourcemaps.write(options.paths.maps));
             }
-            return pipeline.pipe(gulp.dest(dest + '/scripts/app'));
+
+            return pipeline.pipe(gulp.dest(dest + '/app'));
         }
     };
 })();

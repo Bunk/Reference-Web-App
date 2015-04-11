@@ -29,9 +29,8 @@
                 bowerRoot + 'fontawesome/fonts/*.*'
             ],
             style: [
-                bowerRoot + 'angular/**/*.css',
-                assetRoot + '**/*.scss',
-                appRoot + '**/*.scss'
+                assetRoot + '**/*.{scss,sass,css}',
+                appRoot + '**/*.{scss,sass,css}'
             ],
             dist: '_dist/',
             local: '_local/',

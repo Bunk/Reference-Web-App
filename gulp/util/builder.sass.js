@@ -2,13 +2,10 @@
     'use strict';
 
     var gulp = require('gulp'),
-        plugins = require('gulp-load-plugins')({
-            lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
-        }),
         options = require('./options'),
-        mainBowerFiles = require('main-bower-files');
-
-    var scssFilter = plugins.filter('**/*.{scss,css}');
+        plugins = require('gulp-load-plugins')({
+            lazy: false, pattern: ['gulp-*', 'uglify-save-license', 'del']
+        });
 
     function rootPath(isDist) {
         return (isDist) ? options.paths.dist : options.paths.local;
@@ -22,10 +19,14 @@
     module.exports = {
         sass: function (isDist) {
             var dest = rootPath(isDist);
-            var pipeline = gulp.src(mainBowerFiles().concat(options.paths.style))
+
+            var sassFilter = plugins.filter('**/*.{scss,css}');
+            var pipeline = gulp.src(options.paths.style)
                 .pipe(plugins.plumber(onError))
-                .pipe(scssFilter)
-                .pipe(plugins.sass());
+                .pipe(sassFilter)
+                .pipe(plugins.sass())
+                .pipe(sassFilter.restore());
+
             if (isDist) {
                 pipeline = pipeline
                     .pipe(plugins.sourcemaps.init())
@@ -33,7 +34,8 @@
                     .pipe(plugins.rev())
                     .pipe(plugins.sourcemaps.write(options.paths.maps));
             }
-            pipeline = pipeline.pipe(gulp.dest(dest + '/css'));
+
+            pipeline = pipeline.pipe(gulp.dest(dest + '/assets'));
 
             return pipeline;
         }

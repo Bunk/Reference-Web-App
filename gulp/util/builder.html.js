@@ -4,7 +4,8 @@
     var gulp = require('gulp'),
         options = require('./options'),
         plugins = require('gulp-load-plugins')({
-            lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del', 'event-stream']
+            lazy: false,
+            pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del', 'event-stream']
         }),
         opts = {
             html: { empty: true, spare: true, quotes: true },
@@ -23,25 +24,30 @@
         return (isDist) ? options.paths.dist : options.paths.local;
     }
 
+    function destPath(isDist, path) {
+        return rootPath(isDist) + path;
+    }
+
     module.exports = {
-        // https://www.npmjs.com/package/gulp-inject
         html: function(isDist) {
             var dest = rootPath(isDist),
-            bowerFiles = gulp.src(plugins.mainBowerFiles(), {read: false}),
-            angularFiles = gulp.src(dest + 'app/**/*.js').pipe(plugins.gulpAngularFilesort()),
-            cssFiles = gulp.src(dest + '**/*.css', {read: false}),
-            appFiles = plugins.eventStream.merge(cssFiles, angularFiles),
-            index = options.paths.root + 'index.html';
+                bowerFiles = gulp.src(plugins.mainBowerFiles(), { read: false }),
+                appFiles = plugins.eventStream.merge(
+                    // angular js -- will preserve correct ordering
+                    // note: need to enable reading for ordering to work
+                    gulp.src(dest + 'app/**/*.js')
+                        .pipe(plugins.angularFilesort()),
+                    // css
+                    gulp.src(dest + '**/*.css', { read: false })
+                );
 
-            var pipeline = gulp.src(index)
+            var pipeline = gulp.src(options.paths.root + 'index.html')
                 .pipe(plugins.inject(bowerFiles, {name: 'bower'}))
-                .pipe(plugins.inject(appFiles, {ignorePath: dest}));
-            if(isDist) {
-                pipeline = pipeline.pipe(plugins.minifyHtml(opts.html));
-            }
-            pipeline = pipeline
+                .pipe(plugins.inject(appFiles, {ignorePath: dest}))
+                .pipe(plugins.if(isDist, plugins.minifyHtml(opts.html)))
                 .pipe(gulp.dest(dest))
                 .pipe(plugins.size({ title: dest, showFiles: true }));
+
             return pipeline;
         },
         fonts: function(isDist) {
@@ -61,13 +67,10 @@
         },
         templates: function(isDist) {
             var dest = rootPath(isDist);
-            var pipeline = gulp.src(options.paths.app + '**/!(index)*.html');
-            if(isDist) {
-                pipeline = pipeline.pipe(plugins.minifyHtml(opts.html));
-            }
-            pipeline = pipeline
+            var pipeline = gulp.src(options.paths.app + '**/!(index)*.html')
+                .pipe(plugins.if(isDist, plugins.minifyHtml(opts.html)))
                 .pipe(plugins.angularTemplatecache('templateCacheHtml.js', opts.templateCache))
-                .pipe(gulp.dest(dest + 'scripts/templates/'));
+                .pipe(gulp.dest(dest + '/app'));                
             return pipeline;
         }
     };

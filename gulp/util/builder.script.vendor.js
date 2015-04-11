@@ -3,11 +3,9 @@
 
     var gulp = require('gulp'),
         plugins = require('gulp-load-plugins')({
-            lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
+            lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del', 'event-stream']
         }),
-        mainBowerFiles = require('main-bower-files'),
-        options = require('./options'),
-        jsFilter = plugins.filter('**/*.js');
+        options = require('./options');
 
     function rootPath(isDist) {
         return (isDist) ? options.paths.dist : options.paths.local;
@@ -19,12 +17,14 @@
     }
 
     module.exports = {
+        // Runs any independent
         vendor: function (isDist) {
             var dest = rootPath(isDist);
-            var pipeline = gulp.src(mainBowerFiles())
+
+            var pipeline = gulp.src(plugins.mainBowerFiles(), { base: options.paths.bower })
                 .pipe(plugins.plumber(onError))
-                .pipe(plugins.changed(dest))
-                .pipe(jsFilter);
+                .pipe(plugins.changed(dest));
+
             if (isDist) {
                 pipeline = pipeline
                     .pipe(plugins.sourcemaps.init())
@@ -33,7 +33,8 @@
                     .pipe(plugins.rev())
                     .pipe(plugins.sourcemaps.write(options.paths.maps));
             }
-            return pipeline.pipe(gulp.dest(dest + '/scripts'));
+
+            return pipeline.pipe(gulp.dest(dest + options.paths.bower));
         }
     };
 })();
