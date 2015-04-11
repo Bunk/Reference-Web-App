@@ -10,7 +10,7 @@
         mapsRoot = 'sourcemaps/';
 
     module.exports = {
-        module: 'Reference-Web-App',
+        module: 'app',
         browserPorts: {
             local: 8080,
             dist: 8081
@@ -22,7 +22,6 @@
             bower: bowerRoot,
             bowerJson: bowerJson,
             maps: mapsRoot,
-            index: srcRoot + 'index.html',
             images: [
                 assetRoot + '**/*.{gif,jgp,png}'
             ],

@@ -4,7 +4,7 @@
     var gulp = require('gulp'),
         options = require('./options'),
         plugins = require('gulp-load-plugins')({
-            lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
+            lazy: false, pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del', 'event-stream']
         }),
         opts = {
             html: { empty: true, spare: true, quotes: true },
@@ -24,17 +24,23 @@
     }
 
     module.exports = {
+        // https://www.npmjs.com/package/gulp-inject
         html: function(isDist) {
             var dest = rootPath(isDist),
-            injects = gulp.src([dest + '**/*.js', dest + '**/*.css'], {read: false}),
-            index = options.paths.app + '*.html';
+            bowerFiles = gulp.src(plugins.mainBowerFiles(), {read: false}),
+            angularFiles = gulp.src(dest + 'app/**/*.js').pipe(plugins.gulpAngularFilesort()),
+            cssFiles = gulp.src(dest + '**/*.css', {read: false}),
+            appFiles = plugins.eventStream.merge(cssFiles, angularFiles),
+            index = options.paths.root + 'index.html';
 
             var pipeline = gulp.src(index)
-                .pipe(plugins.inject(injects, {ignorePath: dest}));
+                .pipe(plugins.inject(bowerFiles, {name: 'bower'}))
+                .pipe(plugins.inject(appFiles, {ignorePath: dest}));
             if(isDist) {
                 pipeline = pipeline.pipe(plugins.minifyHtml(opts.html));
             }
-            pipeline = pipeline.pipe(gulp.dest(dest))
+            pipeline = pipeline
+                .pipe(gulp.dest(dest))
                 .pipe(plugins.size({ title: dest, showFiles: true }));
             return pipeline;
         },

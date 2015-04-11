@@ -21,6 +21,7 @@
     "conventional-changelog": "0.0.17",
     "del": "^1.1.1",
     "gulp": "^3.8.11",
+    "gulp-angular-filesort": "~1.1.1",
     "gulp-angular-templatecache": "^1.6.0",
     "gulp-bump": "^0.3.0",
     "gulp-changed": "^1.2.1",
@@ -59,5 +60,5 @@
     "wiredep": "^2.2.2",
     "yargs": "^3.7.0"
   },
-  "dependencies": {}
+  "dependencies": { }
 }
