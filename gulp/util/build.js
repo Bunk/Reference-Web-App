@@ -12,6 +12,7 @@
                     'js' + mode,
                     'sass' + mode,
                     'fonts' + mode,
+                    'images' + mode,
                     'templates' + mode
                 ],
                 'html' + mode,

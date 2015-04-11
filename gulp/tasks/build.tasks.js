@@ -40,6 +40,8 @@
     gulp.task('fonts:dist',     function() { return htmlBuilder.fonts(true); });
     gulp.task('html',           function() { return htmlBuilder.html(false); });
     gulp.task('html:dist',      function() { return htmlBuilder.html(true); });
+    gulp.task('images',         function() { return htmlBuilder.images(false); });
+    gulp.task('images:dist',    function() { return htmlBuilder.images(true); });
     gulp.task('templates',      function() { return htmlBuilder.templates(false); });
     gulp.task('templates:dist', function() { return htmlBuilder.templates(true); });
 

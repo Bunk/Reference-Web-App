@@ -20,7 +20,10 @@
         // Moves app scripts to the dest folder
         app: function (isDist) {
             var dest = rootPath(isDist),
-                scripts = options.paths.app + '**/*.js';
+                scripts = [
+                    options.paths.app + '**/*.js',
+                    '!' + options.paths.app + '**/*.spec.js'
+                ];
 
             var pipeline = gulp.src(scripts)
                 .pipe(plugins.plumber(onError))

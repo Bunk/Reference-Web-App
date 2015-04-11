@@ -11,10 +11,11 @@
             html: { empty: true, spare: true, quotes: true },
             uglify: { preserveComments: plugins.uglifySaveLicense },
             templateCache: {
-                module: options.module,
-                root: 'templates',
-                templateHeader: '(function() {"use strict";angular.module("<%= module %>"<%= standalone %>).run(["$templateCache", function($templateCache) {',
-                templateFooter: '}]);})();'
+                module: options.module + '.core',
+                root: 'app/',
+                standAlone: false,
+                // templateHeader: '(function() {"use strict";angular.module("<%= module %>"<%= standalone %>).run(["$templateCache", function($templateCache) {',
+                // templateFooter: '}]);})();'
             }
         };
 
@@ -57,20 +58,30 @@
                 .pipe(plugins.flatten())
                 .pipe(gulp.dest(dest + 'fonts/'));
         },
+        images: function (isDist) {
+            var dest = rootPath(isDist);
+            return gulp.src(options.paths.assets + '/images/**/*.*')
+                .pipe(gulp.dest(dest + '/assets/images'))
+
+        },
         other: function (isDist) {
             var dest = rootPath(isDist);
             return gulp.src([
-                options.root + '**/*',
-                '!' + options.root + '**/*.{html,css,js,scss}'
-            ])
-            .pipe(gulp.dest(dest + '/'));
+                    options.root + '**/*',
+                    '!' + options.root + '**/*.{html,css,js,scss}'
+                ])
+                .pipe(gulp.dest(dest + '/'));
         },
         templates: function(isDist) {
-            var dest = rootPath(isDist);
-            var pipeline = gulp.src(options.paths.app + '**/!(index)*.html')
+            var dest = rootPath(isDist),
+                src = [
+                    options.paths.app + '**/*.html',
+                    '!' + options.paths.app + '**/index.html'
+                ];
+            var pipeline = gulp.src(src)
                 .pipe(plugins.if(isDist, plugins.minifyHtml(opts.html)))
-                .pipe(plugins.angularTemplatecache('templateCacheHtml.js', opts.templateCache))
-                .pipe(gulp.dest(dest + '/app'));                
+                .pipe(plugins.angularTemplatecache('templates.js', opts.templateCache))
+                .pipe(gulp.dest(dest + '/app'));
             return pipeline;
         }
     };
