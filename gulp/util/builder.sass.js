@@ -18,7 +18,9 @@
 
     module.exports = {
         sass: function (isDist) {
-            var dest = rootPath(isDist);
+            var dest = rootPath(isDist),
+                scssFilter = plugins.filter('**/*.{scss,css}');
+            
 
             var sassFilter = plugins.filter('**/*.{scss,css}');
             var pipeline = gulp.src(options.paths.style)

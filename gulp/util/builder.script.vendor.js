@@ -19,7 +19,8 @@
     module.exports = {
         // Runs any independent
         vendor: function (isDist) {
-            var dest = rootPath(isDist);
+            var dest = rootPath(isDist),
+                jsFilter = plugins.filter('**/*.js');
 
             var pipeline = gulp.src(plugins.mainBowerFiles(), { base: options.paths.bower })
                 .pipe(plugins.plumber(onError))

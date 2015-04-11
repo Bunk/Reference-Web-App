@@ -10,10 +10,7 @@
         sassBuilder = require('../util/builder.sass');
 
     // TASK RUNNERS
-    gulp.task('default', ['run']);
-
-    gulp.task('run', ['watch']);
-    gulp.task('run:dist', ['watch:dist']);
+    gulp.task('default', ['watch']);
 
     gulp.task('js', ['app.js','vendor.js']);
     gulp.task('js:dist', ['app.js:dist','vendor.js:dist']);
