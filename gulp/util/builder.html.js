@@ -37,7 +37,7 @@
                     gulp.src(dest + 'app/**/*.js')
                         .pipe(plugins.angularFilesort()),
                     // css
-                    gulp.src(dest + '**/*.css', { read: false })
+                    gulp.src(dest + 'assets/**/*.css', { read: false })
                 );
 
             var pipeline = gulp.src(options.paths.root + 'index.html')
