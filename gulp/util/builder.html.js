@@ -5,7 +5,7 @@
         options = require('./options'),
         plugins = require('gulp-load-plugins')({
             lazy: false,
-            pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del', 'event-stream']
+            pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del', 'event-stream', 'stream-series']
         }),
         opts = {
             html: { empty: true, spare: true, quotes: true },
@@ -31,18 +31,20 @@
         html: function(isDist) {
             var dest = rootPath(isDist),
                 bowerFiles = gulp.src(plugins.mainBowerFiles(), { read: false }),
-                appFiles = plugins.eventStream.merge(
-                    // angular js -- will preserve correct ordering
-                    // note: need to enable reading for ordering to work
-                    gulp.src(dest + 'app/**/*.js')
-                        .pipe(plugins.angularFilesort()),
-                    // css
-                    gulp.src(dest + 'assets/**/*.css', { read: false })
+                jsFiles = plugins.streamSeries(
+                    // Ordering on Angular files
+                    gulp.src(dest + 'app/**/*.js').pipe(plugins.angularFilesort())
+                ),
+                cssFiles = plugins.streamSeries(
+                    // Order matters here. Import global styles before others.
+                    gulp.src(dest + 'assets/styles/**/*.css', { read: false }),
+                    gulp.src(dest + 'app/**/*.css', { read: false })
                 );
 
             var pipeline = gulp.src(options.paths.root + 'index.html')
                 .pipe(plugins.inject(bowerFiles, {name: 'bower'}))
-                .pipe(plugins.inject(appFiles, {ignorePath: dest}))
+                .pipe(plugins.inject(jsFiles, {ignorePath: dest}))
+                .pipe(plugins.inject(cssFiles, {ignorePath: dest}))
                 .pipe(plugins.if(isDist, plugins.minifyHtml(opts.html)))
                 .pipe(gulp.dest(dest))
                 .pipe(plugins.size({ title: dest, showFiles: true }));

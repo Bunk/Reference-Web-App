@@ -18,16 +18,11 @@
 
     module.exports = {
         sass: function (isDist) {
-            var dest = rootPath(isDist),
-                scssFilter = plugins.filter('**/*.{scss,css}');
-            
+            var dest = rootPath(isDist);
 
-            var sassFilter = plugins.filter('**/*.{scss,css}');
-            var pipeline = gulp.src(options.paths.style)
+            var pipeline = gulp.src(options.paths.root + '**/*.{scss,sass,css}')
                 .pipe(plugins.plumber(onError))
-                .pipe(sassFilter)
-                .pipe(plugins.sass())
-                .pipe(sassFilter.restore());
+                .pipe(plugins.sass());
 
             if (isDist) {
                 pipeline = pipeline
@@ -37,7 +32,7 @@
                     .pipe(plugins.sourcemaps.write(options.paths.maps));
             }
 
-            pipeline = pipeline.pipe(gulp.dest(dest + '/assets'));
+            pipeline = pipeline.pipe(gulp.dest(dest));
 
             return pipeline;
         }

@@ -30,8 +30,7 @@
                 srcRoot + '**/*.{eot,svg,ttf,woff,woff2}'
             ],
             style: [
-                assetRoot + '**/*.{scss,sass,css}',
-                appRoot + '**/*.{scss,sass,css}'
+                assetRoot + '**/*.{scss,sass,css}'
             ],
             dist: '_dist/',
             local: '_local/',
