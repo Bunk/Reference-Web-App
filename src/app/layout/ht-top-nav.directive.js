@@ -20,7 +20,7 @@
 
         /* @ngInject */
         function TopNavController() {
-            var vm = this;
+            var vm = this; // jshint ignore:line
         }
 
         return directive;

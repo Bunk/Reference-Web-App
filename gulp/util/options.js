@@ -40,6 +40,9 @@
             e2eSrc: 'test/e2e/src/*.js',
             e2eDist: 'test/e2e/dist/'
         },
+        jshint: {
+            verbose: true
+        },
         onerror: function(title) {
             return function(err) {
                 gutil.log(gutil.colors.red('[' + title + ']'), err.toString());

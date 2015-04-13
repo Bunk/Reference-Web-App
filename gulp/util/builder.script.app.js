@@ -29,7 +29,7 @@
                 .pipe(plugins.plumber(onError))
                 .pipe(plugins.changed(dest))
                 .pipe(plugins.jshint('.jshintrc'))
-                .pipe(plugins.jshint.reporter('jshint-stylish'));
+                .pipe(plugins.jshint.reporter('jshint-stylish', { verbose: options.jshint.verbose }));
 
             if (isDist) {
                 pipeline = pipeline
